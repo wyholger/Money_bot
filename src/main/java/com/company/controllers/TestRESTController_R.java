@@ -39,8 +39,9 @@ public class TestRESTController_R {
 		
 		if(currency != null && currency != "")
 		{
-			double res = currencyUtils.getLatestExchange(currency);
+			double res = currencyUtils.getDifference(currency);
 			model.addAttribute("searchResult", res);
+			model.addAttribute("kostyl", "kostyl");//костыль, иначе картинка  выводится до получения значения
 			return "ChooseMoney";
 		}
 		return "ChooseMoney";
