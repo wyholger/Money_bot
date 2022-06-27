@@ -2,15 +2,18 @@ package com.company.controllers;
 
 
 import com.company.utils.CurrencyUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/romzes")
 public class TestRESTController_R {
 	
 	 private CurrencyUtils currencyUtils;
@@ -19,7 +22,7 @@ public class TestRESTController_R {
 		this.currencyUtils = currencyUtils;
 	}
 	
-	@ResponseBody
+	@ResponseBody ///delete
 	@GetMapping("/sayHey")
 	public String sayHo(){
 		return "Hello world";
@@ -27,8 +30,20 @@ public class TestRESTController_R {
 	
 	@GetMapping("/gif")
 	public String gifDemo(){
-		System.out.println(currencyUtils.getDifference());
 		return "GifResponce";
+	}
+	
+	@GetMapping("/get_cur")
+	public String getCurrency(@RequestParam(name="currency", required = false)
+	                         String currency, Model model) throws JsonProcessingException {
+		
+		if(currency != null && currency != "")
+		{
+			double res = currencyUtils.getLatestExchange(currency);
+			model.addAttribute("searchResult", res);
+			return "ChooseMoney";
+		}
+		return "ChooseMoney";
 	}
 	
 }
