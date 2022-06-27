@@ -2,6 +2,7 @@ package com.company.controllers;
 
 
 import com.company.utils.CurrencyUtils;
+import com.company.utils.GifUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TestRESTController_R {
 	
 	 private CurrencyUtils currencyUtils;
+	 private GifUtils gifUtils;
 	@Autowired
-	public TestRESTController_R(CurrencyUtils currencyUtils){
+	public TestRESTController_R(CurrencyUtils currencyUtils,
+	                            GifUtils gifUtils){
 		this.currencyUtils = currencyUtils;
+		this.gifUtils = gifUtils;
 	}
 	
 	@ResponseBody ///delete
@@ -40,7 +44,10 @@ public class TestRESTController_R {
 		if(currency != null && currency != "")
 		{
 			double res = currencyUtils.getDifference(currency);
+			String imgURL = gifUtils.getGifURL(res);
+			
 			model.addAttribute("searchResult", res);
+			model.addAttribute("imgurl", imgURL);
 			model.addAttribute("kostyl", "kostyl");//костыль, иначе картинка  выводится до получения значения
 			return "ChooseMoney";
 		}
