@@ -10,20 +10,25 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class GifUtils {
 	
-	public String getGifURL(double res) throws JsonProcessingException {
+	public String getGifURL(String res) throws JsonProcessingException {
 		//mare request
 		RestTemplate rt = new RestTemplate();
-		String url = "https://api.giphy.com/v1/gifs/search?api_key=74psuvomPMW3uJlKnLEYj6tmPfcYfWFU&q=rich&limit=3";
+		String urlRich = "https://api.giphy.com/v1/gifs/search?api_key=74psuvomPMW3uJlKnLEYj6tmPfcYfWFU&q=rich&limit=20";
+		String urlPoor = "https://api.giphy.com/v1/gifs/search?api_key=74psuvomPMW3uJlKnLEYj6tmPfcYfWFU&q=poor&limit=20";
+		String response = null;
+		if(res.equals("rich"))
+			response = rt.getForObject(urlRich, String.class);
+		else
+			response = rt.getForObject(urlPoor, String.class);
 		
-		String response = rt.getForObject(url, String.class);
-		System.out.println(response);
 		//pars
 		ObjectMapper objectMapper = new ObjectMapper();//TODO create bean of ObjectMapper and autoWired
 		//create JsonNode tree from response obj by parsing it
 		JsonNode jsonNode = objectMapper.readTree(response); //TODO catch exeption here
-		String imgURL = jsonNode.get("data").get(0).get("embed_url").toString(); //TODO random choose
-		
-		System.out.println(imgURL);//
+		//random pic from 0-20
+		int random = (int) (Math.random() * 20);
+		//pars url and get rid of ""
+		String imgURL = jsonNode.get("data").get(random).get("embed_url").toString().replaceAll("\"", ""); //TODO random choose
 		
 		return imgURL;
 	}

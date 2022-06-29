@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 @Controller
 @RequestMapping("/romzes")
@@ -28,30 +31,33 @@ public class TestRESTController_R {
 	
 	@ResponseBody ///delete
 	@GetMapping("/sayHey")
-	public String sayHo(){
-		return "Hello world";
-	}
-	
-	@GetMapping("/gif")
-	public String gifDemo(){
-		return "GifResponce";
+	public String sayHo(@RequestParam(name = "val", required = false) String picVal) throws JsonProcessingException {
+		System.out.println(picVal);//!del
+		
+		String imgURL = gifUtils.getGifURL(picVal);
+		
+		return "<iframe src=\"" + imgURL + "\" width=\"480\" height=\"295\" frameBorder=\"0\" class=\"giphy-embed\" allowFullScreen>";
+		
 	}
 	
 	@GetMapping("/get_cur")
 	public String getCurrency(@RequestParam(name="currency", required = false)
-	                         String currency, Model model) throws JsonProcessingException {
+	                         String currency, Model model) throws JsonProcessingException, MalformedURLException {
 		
 		if(currency != null && currency != "")
 		{
 			double res = currencyUtils.getDifference(currency);
-			String imgURL = gifUtils.getGifURL(res);
-			
-			model.addAttribute("searchResult", res);
-			model.addAttribute("imgurl", imgURL);
-			model.addAttribute("kostyl", "kostyl");//костыль, иначе картинка  выводится до получения значения
-			return "ChooseMoney";
+			String s;
+			if (res > 0)
+				s = "rich";
+			else
+				s = "poor";
+			return "redirect:sayHey?val=" + s;
 		}
 		return "ChooseMoney";
 	}
-	
+	@GetMapping("/gif")
+	public String gifDemo(){
+		return "GifResponce";
+	}
 }
