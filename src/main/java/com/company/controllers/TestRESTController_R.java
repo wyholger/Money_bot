@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.net.MalformedURLException;
-import java.net.URL;
+
 
 
 @Controller
@@ -29,9 +28,9 @@ public class TestRESTController_R {
 		this.gifUtils = gifUtils;
 	}
 	
-	@ResponseBody ///delete
-	@GetMapping("/sayHey")
-	public String sayHo(@RequestParam(name = "val", required = false) String picVal) throws JsonProcessingException {
+	@ResponseBody //return information into browser, without html
+	@GetMapping("/showGif")
+	public String showGif(@RequestParam(name = "val", required = false) String picVal) throws JsonProcessingException {
 		System.out.println(picVal);//!del
 		
 		String imgURL = gifUtils.getGifURL(picVal);
@@ -52,7 +51,7 @@ public class TestRESTController_R {
 				s = "rich";
 			else
 				s = "poor";
-			return "redirect:sayHey?val=" + s;
+			return "redirect:showGif?val=" + s;
 		}
 		return "ChooseMoney";
 	}
